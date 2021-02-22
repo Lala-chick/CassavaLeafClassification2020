@@ -10,6 +10,7 @@ Kaggle의 Cassava Leaf Disease Classification Competition의 코드
 5. "Healthy"
 
 모델은 timm라이브러리에서 총 6가지를 학습하여 앙상블 기법을 사용함
+
 학습 시 5 Fold Cross Validation을 이용
 1. resnet50d (ResNet)
 2. resnext 50d 32x4d (ResNext)
