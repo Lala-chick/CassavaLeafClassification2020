@@ -41,23 +41,23 @@ private LB: 0.9007
 # Data
 코드를 사용하기 위해서는 https://www.kaggle.com/c/cassava-leaf-disease-classification/data로부터 데이터를 받아 train images폴더와 test images 폴더를 CassavaLeafClassification2020/data 폴더안에 넣어주고, train.csv파일을 CassavaLeafClassification2020폴더에 넣어주어야 함
 
-# Run.py Arguments
-"--model", type=str, default="tf_efficientnet_b3_ns"
-"--train_bs", type=int, default=16
-"--valid_bs", type=int, default=32
-"--test_bs", type=int, default=32
-"--epoch", type=int, default=10
-"--fold_num", type=int, default=5
-"--lr", type=float, default=1e-4
-"--weight_decay", type=float, default=1e-6
-"--num_workers", type=int, default=4
-"--accum_iter", type=int, default=2
-"--verbose_step", type=int, default=1
-"--img_size", type=int, default=512
-"--seed", type=int, default=209
-"--T_0", type=int, default=10
-"--min_lr", type=float, default=1e-6
-"--vit_img", type=int, default=384
+# run_train.py Arguments
+"--model", type=str, default="tf_efficientnet_b3_ns"  
+"--train_bs", type=int, default=16  
+"--valid_bs", type=int, default=32  
+"--test_bs", type=int, default=32  
+"--epoch", type=int, default=10  
+"--fold_num", type=int, default=5  
+"--lr", type=float, default=1e-4  
+"--weight_decay", type=float, default=1e-6  
+"--num_workers", type=int, default=4  
+"--accum_iter", type=int, default=2  
+"--verbose_step", type=int, default=1  
+"--img_size", type=int, default=512  
+"--seed", type=int, default=209  
+"--T_0", type=int, default=10  
+"--min_lr", type=float, default=1e-6  
+"--vit_img", type=int, default=384  
 
 ## 여담
 EfficientNet b3 + ViT로 했으면 silver medal 달성 가능했는데 아쉽다. 이번 competition을 통해 파라미터가 적은 모델이 generalizing performance가 더 좋다는 것을 체감할 수 있었다.
