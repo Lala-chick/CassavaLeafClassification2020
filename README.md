@@ -16,3 +16,8 @@ Kaggle의 Cassava Leaf Disease Classification Competition의 코드
 4. tf_efficientnet_b3_ns (EfficientNet)
 5. tf_efficientnet_b4_ns (EfficientNet)
 6. vit_base_patch_16_384 (Vision Transformer)
+
+public score는 EfficientNet b4 + ResNext101 + ViT의 조합이 가장 높았으나
+private score는 EfficientNet b3 + ViT의 조합이 가장 높은 것을 확인 할 수 있었음
+
+성능 향상을 위해 앙상블 기법과 더불어 Test Time Augmentation(TTA)적용
