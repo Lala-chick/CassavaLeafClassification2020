@@ -9,7 +9,9 @@ Kaggle의 Cassava Leaf Disease Classification Competition의 코드
 3. "Cassava Mosaic Disease (CMD)"
 4. "Healthy"
 
-모델은 timm라이브러리에서 총 6가지를 학습하여 앙상블 기법을 사용함
+# 모델
+---
+모델은 timm라이브러리에서 총 6가지를 학습
 
 학습 시 5 Fold Cross Validation을 이용
 1. resnet50d (ResNet)
@@ -19,8 +21,31 @@ Kaggle의 Cassava Leaf Disease Classification Competition의 코드
 5. tf_efficientnet_b4_ns (EfficientNet)
 6. vit_base_patch_16_384 (Vision Transformer)
 
+# 앙상블 기법
+---
+6가지 모델들에 대해 앙상블을 적용해 보고 제출을 시도
 public score는 EfficientNet b4 + ResNext101 + ViT의 조합이 가장 높았으나
 private score는 EfficientNet b3 + ViT의 조합이 가장 높은 것을 확인 할 수 있었음
 
+EfficientNet b4 + ResNext101 + ViT
+public LB: 0.9041
+private LB: 0.8986
 
+EfficientNet b3 + ViT
+public LB: 0.9000
+private LB: 0.9007
+
+# Test Time Augmentation
+---
 성능 향상을 위해 앙상블 기법과 더불어 Test Time Augmentation(TTA)적용
+
+최종 제출은 public LB가 가장 높았던 EfficientNet b4 + ResNext101 + ViT로 해서 bronze medal 달성
+
+# Data
+---
+코드를 사용하기 위해서는 https://www.kaggle.com/c/cassava-leaf-disease-classification/data로부터 데이터를 받아 train images폴더와 test images 폴더를 CassavaLeafClassification2020/data 폴더안에 넣어주고, train.csv파일을 CassavaLeafClassification2020폴더에 넣어주어야 함
+
+
+
+## 여담
+EfficientNet b3 + ViT로 했으면 silver medal 달성 가능했는데 아쉽다. 이번 competition을 통해 파라미터가 적은 모델이 generalizing performance가 더 좋다는 것을 체감할 수 있었다.
