@@ -29,9 +29,9 @@ EfficientNet b4 + ResNext101 + ViT
 public LB: 0.9041
 private LB: 0.8986
 
-EfficientNet b3 + ViT
-public LB: 0.9000
-private LB: 0.9007
+EfficientNet b3 + ResNext50 + ViT
+public LB: 0.9025
+private LB: 0.9011
 
 # Test Time Augmentation
 성능 향상을 위해 앙상블 기법과 더불어 Test Time Augmentation(TTA)적용
@@ -39,7 +39,7 @@ private LB: 0.9007
 최종 제출은 public LB가 가장 높았던 EfficientNet b4 + ResNext101 + ViT로 해서 bronze medal 달성
 
 # Data
-코드를 사용하기 위해서는 https://www.kaggle.com/c/cassava-leaf-disease-classification/data로부터 데이터를 받아 train images폴더와 test images 폴더를 CassavaLeafClassification2020/data 폴더안에 넣어주고, train.csv파일을 CassavaLeafClassification2020폴더에 넣어주어야 함
+코드를 사용하기 위해서는 https://www.kaggle.com/c/cassava-leaf-disease-classification/data로부터 데이터를 받아 train images폴더와 test images 폴더를 CassavaLeafClassification2020/data 폴더안에 넣어주고, train.csv, sample_submission.csv파일을 CassavaLeafClassification2020폴더에 넣어주어야 함
 
 # run_train.py Arguments
 "--model", type=str, default="tf_efficientnet_b3_ns"  
@@ -58,6 +58,19 @@ private LB: 0.9007
 "--T_0", type=int, default=10  
 "--min_lr", type=float, default=1e-6  
 "--vit_img", type=int, default=384  
+
+# run_inference.py Arguments
+"--efficientnet_b3", type=bool, default=True
+"--efficientnet_b4", type=bool, default=False
+"--resnet_50", type=bool, default=False
+"--resnext_50", type=bool, default=True
+"--resnext_101", type=bool, default=False
+"--ViT", type=bool, default=True
+"--test_bs", type=int, default=32
+"--tta", type=int, default=3
+"--num_workers", type=int, default=4
+"--img_size", type=int, default=512
+"--vit_img", type=int, default=384
 
 ## 여담
 EfficientNet b3 + ViT로 했으면 silver medal 달성 가능했는데 아쉽다. 이번 competition을 통해 파라미터가 적은 모델이 generalizing performance가 더 좋다는 것을 체감할 수 있었다.
