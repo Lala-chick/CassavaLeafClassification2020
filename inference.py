@@ -1,6 +1,3 @@
-import augmentations
-import data_loader
-import models
 import argparse
 import pandas as pd
 import numpy as np
@@ -9,6 +6,9 @@ import glob
 from tqdm import tqdm
 import copy
 from scipy.special import softmax
+
+from data import test_dataloader
+from models import *
 
 def inference(model, test_loader, device):
     preds = []
@@ -36,69 +36,89 @@ def main(cfg):
     cfg_device = "cuda:0" if torch.cuda.is_available() else "cpu"
     device = torch.device(cfg_device)
     if cfg.ViT:
-        test_loader_vit = data_loader.test_dataloader(test, cfg, "ViT", data_root="../CassavaLeafClassification2020/data/test_images")
+        test_loader_vit = test_dataloader(test, cfg, "ViT", data_root="../CassavaLeafClassification2020/test_images")
     if cfg.efficientnet_b3 or cfg.efficientnet_b4 or cfg.resnet_50 or cfg.resnext_50 or cfg.resnext_101: 
-        test_loader = data_loader.test_dataloader(test, cfg, "others", data_root="../CassavaLeafClassification2020/data/test_images")
+        test_loader = test_dataloader(test, cfg, "others", data_root="../CassavaLeafClassification2020/test_images")
     
-    final_preds = [[0, 0, 0, 0, 0]]
+    final_preds = None
     if cfg.efficientnet_b3:
         effnet_b3 = []
         for filepath in glob.iglob(f"../CassavaLeafClassification2020/pretrained/effnet_b3/*.pth"):
             effnet_b3.append(filepath)
-        model = models.EffNetClassifier("tf_efficientnet_b3_ns", 5)
+        model = EffNetClassifier("tf_efficientnet_b3_ns", 5)
         b3_outcomes = test_time_augment(model, effnet_b3, device, test_loader, cfg)
         b3_outcomes = pd.concat([df['image_id'], pd.DataFrame(b3_outcomes)], axis=1).sort_values(['image_id'])
-        final_preds += b3_outcomes.drop('image_id', axis=1).to_numpy()
+        if final_preds is None:
+            final_preds = b3_outcomes.drop('image_id', axis=1).to_numpy()
+        else:
+            final_preds += b3_outcomes.drop('image_id', axis=1).to_numpy()
     
     if cfg.efficientnet_b4: 
         effnet_b4 = []
         for filepath in glob.iglob(f"../CassavaLeafClassification2020/pretrained/effnet_b4/*.pth"):
             effnet_b4.append(filepath)
-        model = models.EffNetClassifier("tf_efficientnet_b4_ns", 5)
+        model = EffNetClassifier("tf_efficientnet_b4_ns", 5)
         b4_outcomes = test_time_augment(model, effnet_b4, device, test_loader, cfg)
         b4_outcomes = pd.concat([df['image_id'], pd.DataFrame(b4_outcomes)], axis=1).sort_values(['image_id'])
-        final_preds += b4_outcomes.drop("image_id", axis=1)
+        if final_preds is None:
+            final_preds = b4_outcomes.drop("image_id", axis=1).to_numpy()
+        else:
+            final_preds += b4_outcomes.drop("image_id", axis=1).to_numpy()
+
 
     if cfg.resnet_50: 
         resnet_50 = []
         for filepath in glob.iglob(f"../CassavaLeafClassification2020/pretrained/resnet50d/*.pth"):
             resnet_50.append(filepath)
-        model = models.ResNetClassifier("resnet50d", 5)
+        model = ResNetClassifier("resnet50d", 5)
         resnet_outcomes = test_time_augment(model, resnet_50, device, test_loader, cfg)
         resnet_outcomes = pd.concat([df['image_id'], pd.DataFrame(resnet_outcomes)], axis=1).sort_values(['image_id'])
-        final_preds += resnet_outcomes.drop("image_id", axis=1)
+        if final_preds is None:
+            final_preds = resnet_outcomes.drop("image_id", axis=1).to_numpy()
+        else:
+            final_preds += resnet_outcomes.drop("image_id", axis=1).to_numpy()
+ 
 
     if cfg.resnext_50: 
         resnext_50 = []
         for filepath in glob.iglob(f"../CassavaLeafClassification2020/pretrained/resnext50/*.pth"):
             resnext_50.append(filepath)
-        model = models.ResNetClassifier("resnext50d_32x4d", 5)
+        model = ResNetClassifier("resnext50d_32x4d", 5)
         resnext_outcomes = test_time_augment(model, resnext_50, device, test_loader, cfg)
         resnext_outcomes = pd.concat([df['image_id'], pd.DataFrame(resnext_outcomes)], axis=1).sort_values(['image_id'])
-        final_preds += resnext_outcomes.drop("image_id", axis=1)
+        if final_preds is None:
+            final_preds = resnext_outcomes.drop("image_id", axis=1).to_numpy()
+        else:
+            final_preds += resnext_outcomes.drop("image_id", axis=1).to_numpy()
+
     
     if cfg.resnext_101: 
         resnext_101 = []
         for filepath in glob.iglob(f"../CassavaLeafClassification2020/pretrained/resnext101/*.pth"):
             resnext_101.append(filepath)
-        model = models.ResNetClassifier("ig_resnext101_32x8d", 5)
+        model = ResNetClassifier("ig_resnext101_32x8d", 5)
         resnext101_outcomes = test_time_augment(model, resnext_101, device, test_loader, cfg)
         resnext101_outcomes = pd.concat([df['image_id'], pd.DataFrame(resnext101_outcomes)], axis=1).sort_values(['image_id'])
-        final_preds += resnext101_outcomes.drop("image_id", axis=1)
-
+        if final_preds is None:
+            final_preds = resnext101_outcomes.drop("image_id", axis=1).to_numpy()
+        else:
+            final_preds += resnext101_outcomes.drop("image_id", axis=1).to_numpy()
 
     if cfg.ViT: 
         ViT = []
         for filepath in glob.iglob(f"../CassavaLeafClassification2020/pretrained/ViT/*.pth"):
             ViT.append(filepath)
-        model = models.ViTClassifier("vit_base_patch16_384", 5)
+        model = ViTClassifier("vit_base_patch16_384", 5)
         vit_outcomes = test_time_augment(model, ViT, device, test_loader_vit, cfg)
         vit_outcomes = pd.concat([df['image_id'], pd.DataFrame(vit_outcomes)], axis=1).sort_values(['image_id'])
-        final_preds += vit_outcomes.drop("image_id", axis=1).to_numpy()
+        if final_preds is None:
+            final_preds = vit_outcomes.drop("image_id", axis=1).to_numpy()
+        else:
+            final_preds += vit_outcomes.drop("image_id", axis=1).to_numpy()
 
     final_preds = softmax(final_preds).argmax(1)
     submit = pd.DataFrame({'image_id': df['image_id'].values, 'label': final_preds})
-    submit.to_csv('submission.csv', index=False)
+    submit.to_csv('./submission.csv', index=False)
 
 if __name__ == "__main__":
     cli_parser = argparse.ArgumentParser()

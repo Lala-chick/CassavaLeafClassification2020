@@ -1,67 +1,36 @@
-from albumentations import (
-    HorizontalFlip,
-    VerticalFlip,
-    IAAPerspective,
-    ShiftScaleRotate,
-    CLAHE,
-    RandomRotate90,
-    Transpose,
-    ShiftScaleRotate,
-    Blur,
-    OpticalDistortion,
-    GridDistortion,
-    HueSaturationValue,
-    IAAAdditiveGaussianNoise,
-    GaussNoise,
-    MotionBlur,
-    MedianBlur,
-    IAAPiecewiseAffine,
-    RandomCrop,
-    IAASharpen,
-    IAAEmboss,
-    RandomBrightnessContrast,
-    Flip,
-    OneOf,
-    Compose,
-    Normalize,
-    Cutout,
-    ShiftScaleRotate,
-    CenterCrop,
-    Resize,
-)
-
+import albumentations as A
 from albumentations.pytorch.transforms import ToTensorV2
 import numpy as np
 import torch
 import sys
 import os
 
-sys.path.append("../CassavaLeafClassification2020/FMix-master")
+sys.path.append("./FMix-master")
 from fmix import sample_mask
 
 
 def get_train_transforms(args):
-    return Compose(
+    return A.Compose(
         [
-            RandomCrop(args.img_size, args.img_size),
-            Resize(args.img_size, args.img_size),
-            Transpose(p=0.5),
-            HorizontalFlip(p=0.5),
-            VerticalFlip(p=0.5),
-            ShiftScaleRotate(p=0.5),
-            HueSaturationValue(
+            A.RandomCrop(args.img_size, args.img_size),
+            A.Resize(args.img_size, args.img_size),
+            A.Transpose(p=0.5),
+            A.HorizontalFlip(p=0.5),
+            A.VerticalFlip(p=0.5),
+            A.ShiftScaleRotate(p=0.5),
+            A.HueSaturationValue(
                 hue_shift_limit=0.2, sat_shift_limit=0.2, val_shift_limit=0.2, p=0.5
             ),
-            RandomBrightnessContrast(
+            A.RandomBrightnessContrast(
                 brightness_limit=(-0.1, 0.1), contrast_limit=(-0.1, 0.1), p=0.5
             ),
-            Normalize(
+            A.Normalize(
                 mean=[0.485, 0.456, 0.406],
                 std=[0.229, 0.224, 0.225],
                 max_pixel_value=255.0,
                 p=1.0,
             ),
-            Cutout(p=0.5),
+            A.Cutout(p=0.5),
             ToTensorV2(p=1.0),
         ],
         p=1.0,
@@ -69,10 +38,10 @@ def get_train_transforms(args):
 
 
 def get_valid_transforms(args):
-    return Compose(
+    return A.Compose(
         [
-            Resize(args.img_size, args.img_size),
-            Normalize(
+            A.Resize(args.img_size, args.img_size),
+            A.Normalize(
                 mean=[0.485, 0.456, 0.406],
                 std=[0.229, 0.224, 0.225],
                 max_pixel_value=255.0,
@@ -85,20 +54,20 @@ def get_valid_transforms(args):
 
 
 def get_inference_Vit_transforms(args):
-    return Compose(
+    return A.Compose(
         [
-            CenterCrop(args.vit_img, args.vit_img, p=0.5),
-            Resize(args.vit_img, args.vit_img),
-            Transpose(p=0.5),
-            HorizontalFlip(p=0.5),
-            VerticalFlip(p=0.5),
-            HueSaturationValue(
+            A.CenterCrop(args.vit_img, args.vit_img, p=0.5),
+            A.Resize(args.vit_img, args.vit_img),
+            A.Transpose(p=0.5),
+            A.HorizontalFlip(p=0.5),
+            A.VerticalFlip(p=0.5),
+            A.HueSaturationValue(
                 hue_shift_limit=0.2, sat_shift_limit=0.2, val_shift_limit=0.2, p=0.5
             ),
-            RandomBrightnessContrast(
+            A.RandomBrightnessContrast(
                 brightness_limit=(-0.1, 0.1), contrast_limit=(-0.1, 0.1), p=0.5
             ),
-            Normalize(
+            A.Normalize(
                 mean=[0.485, 0.456, 0.406],
                 std=[0.229, 0.224, 0.225],
                 max_pixel_value=255.0,
@@ -111,19 +80,19 @@ def get_inference_Vit_transforms(args):
 
 
 def get_inference_transforms(args):
-    return Compose(
+    return A.Compose(
         [
-            Resize(args.img_size, args.img_size),
-            Transpose(p=0.5),
-            HorizontalFlip(p=0.5),
-            VerticalFlip(p=0.5),
-            HueSaturationValue(
+            A.Resize(args.img_size, args.img_size),
+            A.Transpose(p=0.5),
+            A.HorizontalFlip(p=0.5),
+            A.VerticalFlip(p=0.5),
+            A.HueSaturationValue(
                 hue_shift_limit=0.2, sat_shift_limit=0.2, val_shift_limit=0.2, p=0.5
             ),
-            RandomBrightnessContrast(
+            A.RandomBrightnessContrast(
                 brightness_limit=(-0.1, 0.1), contrast_limit=(-0.1, 0.1), p=0.5
             ),
-            Normalize(
+            A.Normalize(
                 mean=[0.485, 0.456, 0.406],
                 std=[0.229, 0.224, 0.225],
                 max_pixel_value=255.0,

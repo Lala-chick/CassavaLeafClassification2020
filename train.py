@@ -5,12 +5,12 @@ import os
 import numpy as np
 from tqdm import tqdm
 from sklearn.model_selection import StratifiedKFold
-from augmentations import fmix, cutmix
 import pandas as pd
-import data_loader
 from torch.cuda.amp import autocast, GradScaler
 from torch import nn
-import models
+
+from data import train_dataloader, valid_dataloader, cutmix, fmix
+from models import *
 
 
 def seed_everything(seed):
@@ -298,31 +298,31 @@ def main(cfg):
         os.makedirs(save_path)
 
     for fold, (trn_idx, val_idx) in enumerate(folds):
-        train_loader = data_loader.train_dataloader(
+        train_loader = train_dataloader(
             train,
             cfg,
             trn_idx,
-            data_root="../CassavaLeafClassification2020/data/train_images",
+            data_root="../CassavaLeafClassification2020/train_images",
         )
-        valid_loader = data_loader.valid_dataloader(
+        valid_loader = valid_dataloader(
             train,
             cfg,
             val_idx,
-            data_root="../CassavaLeafClassification2020/data/train_images",
+            data_root="../CassavaLeafClassification2020/train_images",
         )
 
         device = torch.device(cfg_device)
 
         if is_resnet(cfg.model):
-            model = models.ResNetClassifier(
+            model = ResNetClassifier(
                 cfg.model, train.label.nunique(), pretrained=True
             ).to(device)
         elif is_effnet(cfg.model):
-            model = models.EffNetClassifier(
+            model = EffNetClassifier(
                 cfg.model, train.label.nunique(), pretrained=True
             ).to(device)
         else:
-            model = models.ViTClassifier(
+            model = ViTClassifier(
                 cfg.model, train.label.nunique(), pretrained=True
             ).to(device)
         scaler = GradScaler()

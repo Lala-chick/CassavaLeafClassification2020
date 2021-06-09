@@ -39,7 +39,7 @@ private LB: 0.9011
 최종 제출은 public LB가 가장 높았던 EfficientNet b4 + ResNext101 + ViT로 해서 bronze medal 달성
 
 # Data
-코드를 사용하기 위해서는 https://www.kaggle.com/c/cassava-leaf-disease-classification/data로부터 데이터를 받아 train images폴더와 test images 폴더를 CassavaLeafClassification2020/data 폴더안에 넣어주고, train.csv, sample_submission.csv파일을 CassavaLeafClassification2020폴더에 넣어주어야 함
+코드를 사용하기 위해서는 https://www.kaggle.com/c/cassava-leaf-disease-classification/data로부터 데이터를 받아 train images폴더와 test images 폴더와 train.csv, sample_submission.csv파일을 CassavaLeafClassification2020/ 폴더에 넣어주어야 함
 
 # run_train.py Arguments
 "--model", type=str, default="tf_efficientnet_b3_ns"  
