@@ -71,6 +71,3 @@ private LB: 0.9011
 "--num_workers", type=int, default=4  
 "--img_size", type=int, default=512  
 "--vit_img", type=int, default=384  
-
-## 여담
-EfficientNet b3 + ViT로 했으면 silver medal 달성 가능했는데 아쉽다. 이번 competition을 통해 파라미터가 적은 모델이 generalizing performance가 더 좋다는 것을 체감할 수 있었다.
